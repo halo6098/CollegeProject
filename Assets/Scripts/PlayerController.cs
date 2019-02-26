@@ -5,26 +5,39 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     //Serializing the field allows you to keep the variable private, whilst being able to access it within the unity editor like a public variable.
+
     //Initialise Serialized variables
     [SerializeField] private float movementSpeed; //Speed that player moves, edited through Unity Editor
+    [SerializeField] private AnimationCurve jumpFallOff; //this is a animation curve, essentially a graph that dictates how much force is being put on the players jump at any time during the jump.
+    [SerializeField] private float jumpMultiplier; //How much should the player jump?
+    [SerializeField] private KeyCode jumpKey; //What key is jump? It's space!
+    [SerializeField] private float slopeForce; //adds extra force when going down slopes to remove bouncing that comes with unity. (Unity can be buggy!)
+    [SerializeField] private float slopeForceRayLength; //fires a ray out of your butt to see if there is a slope below you.
+    [SerializeField] public Interactable focus; // Our current focus: Item, Enemy etc.
 
+    [SerializeField] private KeyCode slowTimeKey;
 
-    [SerializeField] private AnimationCurve jumpFallOff;
-    [SerializeField] private float jumpMultiplier;
-    [SerializeField] private float timeSlowAmount;
-    [SerializeField] private KeyCode jumpKey;
-
-    [SerializeField] private float slopeForce;
-    [SerializeField] private float slopeForceRayLength;
-
-    private Vector3 movedirection;
+    //Initialise private variables
+    private bool slowUsed; // Our current focus: Item, Enemy etc.
     private bool isJumping; //test to see if we're allready mid jump.
     private CharacterController controller; // holds the player controller, letting unity know that the controller is the player
+
+    //Initialise public static variables. These are public static variables meaning they can be accessed by all other scripts.
+    public static bool slowTime; //how mana the player has to slow time. 
+
+    //Initialise public variables.
+    public float manaPercent; //how mana the player has to slow time. 
+
+    //used to hold the current interactable object the player has currently pressed F on.
+    Camera cam; // Reference to our camera
 
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
+        manaPercent = 100f;
         //let unity know that the controller is the player
+
         controller = GetComponent<CharacterController>();
     }
 
@@ -33,6 +46,8 @@ public class PlayerController : MonoBehaviour {
     {
         //Runs the private void for player movement
         PlayerMovement();
+        Interact();
+        ManageMana();
     }
 
     private void PlayerMovement()
@@ -60,6 +75,69 @@ public class PlayerController : MonoBehaviour {
         //runs to check if player jumps
         JumpInput();
 
+    }
+
+    private void ManageMana()
+    {
+        if ((Input.GetKey(slowTimeKey) && !(manaPercent < 0f)))
+        {
+            if (manaPercent == 100f)
+            {
+                slowUsed = true;
+            }
+        }
+        else
+        {
+            slowUsed = false;
+
+        }
+
+        if (slowUsed == true)
+        {
+            slowTime = true;
+            manaPercent -= 10f * Time.deltaTime;
+
+        }
+        else
+        {
+            slowTime = false;
+
+            if (manaPercent > 100f)
+            {
+                manaPercent = 100f;
+
+            }
+            else if (manaPercent != 100f)
+            {
+                manaPercent += 10f * Time.deltaTime;
+            }
+        }
+    }
+    private void Interact()
+    {
+        // If we press right mouse
+        //if (Input.GetKeyDown(KeyCode.F))
+        //{
+            // Shoot out a ray
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            // If we hit
+            if (Physics.Raycast(ray, out hit, 100f))
+            {
+                Interactable interactable = hit.collider.GetComponent<Interactable>();
+                if (interactable != null)
+                {
+                    SetFocus(interactable);
+                }
+            }
+        //}
+    }
+
+    void SetFocus(Interactable newFocus)
+    {
+        // Let our previous focus know that it's no longer being focused
+        focus = newFocus;
     }
 
     private bool OnSlope()

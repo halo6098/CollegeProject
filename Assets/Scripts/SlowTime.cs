@@ -7,15 +7,17 @@ public class SlowTime : MonoBehaviour
     //Initialise Variables.
     bool first = true;
     public Rigidbody theRB;
+    bool rampBack = true;
 
     //Initialise the _timeAdjuster variable to 1 so that it can be accessed and edited by the getter and setter.
     private float _timeAdjuster = 1;
-
+    
     private float timeSlowAmount = 0.1f; //Dont want this to be serilized or you'll have to slow time manually on everything that the script is applied to.
     //I found that 0.1f is the best for slowing time.
 
-    [SerializeField] private KeyCode slowTimeKey;
     [SerializeField] private AnimationCurve slowTimeFalloff;
+
+    [SerializeField] private float timeRampTimer = 0.0f;
 
     public float timeAdjuster
     {
@@ -54,13 +56,26 @@ public class SlowTime : MonoBehaviour
     void Update()
     {
         // If player is holding the left mouse button, pass the adjusted time amount into the GetSet function.
-        if (Input.GetKey(slowTimeKey))
+        if ((PlayerController.slowTime))
         {
-            timeAdjuster = timeSlowAmount; 
+            timeAdjuster = timeSlowAmount;
+            rampBack = true;
+            timeRampTimer = 0;
         }
-        else
+        else 
         {
-            timeAdjuster = 1;
+            if (rampBack)
+            {
+                timeRampTimer += Time.deltaTime;
+                if (timeRampTimer > 1)
+                {
+                    timeRampTimer = 1;
+                    rampBack = false;
+                }
+
+                timeAdjuster = timeRampTimer;
+            }
+            
         }
     }
 
