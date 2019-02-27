@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-    [SerializeField] private float radius = 3f;
-
+    public float radius = 3f;
+    public Transform interactionTransform;
+    
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, radius);
-
+        Gizmos.DrawWireSphere(interactionTransform.position, radius);
     }
+
 }

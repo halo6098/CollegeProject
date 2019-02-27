@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour {
     public static bool slowTime; //how mana the player has to slow time. 
 
     //Initialise public variables.
+    public delegate void OnFocusChanged(Interactable newFocus);
+    public OnFocusChanged onFocusChangedCallback;
     public float manaPercent; //how mana the player has to slow time. 
 
     //used to hold the current interactable object the player has currently pressed F on.
@@ -79,23 +81,23 @@ public class PlayerController : MonoBehaviour {
 
     private void ManageMana()
     {
-        if ((Input.GetKey(slowTimeKey) && !(manaPercent < 0f)))
+        if ((Input.GetKey(slowTimeKey) && !(manaPercent < 0f))) //If the player has atleast SOME mana, and is holding the slow time key
         {
-            if (manaPercent == 100f)
+            if (manaPercent == 100f) // then if the player has 100% mana 
             {
-                slowUsed = true;
+                slowUsed = true; // Start slowing time.
             }
         }
         else
         {
-            slowUsed = false;
+            slowUsed = false; //If the player lets go of the slowtime key, or runs out of mana, stop slowing time.
 
         }
 
         if (slowUsed == true)
         {
             slowTime = true;
-            manaPercent -= 10f * Time.deltaTime;
+            manaPercent -= 10f * Time.deltaTime; //Drain mana
 
         }
         else
@@ -109,15 +111,15 @@ public class PlayerController : MonoBehaviour {
             }
             else if (manaPercent != 100f)
             {
-                manaPercent += 10f * Time.deltaTime;
+                manaPercent += 10f * Time.deltaTime;//regen mana
             }
         }
     }
     private void Interact()
     {
-        // If we press right mouse
-        //if (Input.GetKeyDown(KeyCode.F))
-        //{
+        // If we press the F key
+        if (Input.GetKeyDown(KeyCode.F))
+        {
             // Shoot out a ray
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -131,12 +133,13 @@ public class PlayerController : MonoBehaviour {
                     SetFocus(interactable);
                 }
             }
-        //}
+        }
     }
 
     void SetFocus(Interactable newFocus)
     {
-        // Let our previous focus know that it's no longer being focused
+        // Set our focus to what we hit
+        // If it's not an interactable, simply set it to null
         focus = newFocus;
     }
 
