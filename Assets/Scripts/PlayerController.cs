@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement; // needed for press R to reset level. Just need for testing!
+
 
 public class PlayerController : MonoBehaviour {
 
@@ -50,6 +52,12 @@ public class PlayerController : MonoBehaviour {
         PlayerMovement();
         Interact();
         ManageMana();
+
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadSceneAsync("DevTestingZone");
+        }
     }
 
     private void PlayerMovement()
