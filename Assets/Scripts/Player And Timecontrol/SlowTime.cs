@@ -12,7 +12,7 @@ public class SlowTime : MonoBehaviour
     //Initialise the _timeAdjuster variable to 1 so that it can be accessed and edited by the getter and setter.
     private float _timeAdjuster = 1;
     
-    private float timeSlowAmount = 0.1f; //Dont want this to be serilized or you'll have to slow time manually on everything that the script is applied to.
+    private float timeSlowAmount = 0.2f; //Dont want this to be serilized or you'll have to slow time manually on everything that the script is applied to.
     //I found that 0.1f is the best for slowing time.
 
     [SerializeField] private AnimationCurve slowTimeFalloff;

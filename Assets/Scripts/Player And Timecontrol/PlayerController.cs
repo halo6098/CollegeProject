@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float slopeForceRayLength; //fires a ray out of your butt to see if there is a slope below you.
     [SerializeField] private KeyCode slowTimeKey;
 
-    [SerializeField] public Interactable focus; // Our current focus: Item, Enemy etc.
 
     //Initialise private variables
     private bool slowUsed; // Our current focus: Item, Enemy etc.
@@ -27,6 +26,7 @@ public class PlayerController : MonoBehaviour {
     //Initialise public static variables. These are public static variables meaning they can be accessed by all other scripts.
     public static bool slowTime; //how mana the player has to slow time. 
     public static float interactMinDistance = 6f; // minimum distance needed to begin interacting with an interactable.
+    public static Interactable focus; // Our current focus: Item, Enemy etc.
 
     //Initialise public variables.
     public delegate void OnFocusChanged(Interactable newFocus);
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour {
                 slowUsed = true; // Start slowing time.
             }
         }
-        else
+        else if (manaPercent < 75f) //only stop mana drain once at least 25% has been used.
         {
             slowUsed = false; //If the player lets go of the slowtime key, or runs out of mana, stop slowing time.
 
@@ -127,28 +127,38 @@ public class PlayerController : MonoBehaviour {
     private void Interact()
     {
         // If we press the F key
-        if (Input.GetKeyDown(KeyCode.F))
-        {
+
             // Shoot out a ray
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
 
             // If we hit
-            if (Physics.Raycast(ray, out hit, 100f))
-            {
-                Interactable interactable = hit.collider.GetComponent<Interactable>();
-                if (interactable != null)
-                {
-                    SetFocus(interactable);
+        if (Physics.Raycast(ray, out hit, 100f))
+        {
+            Interactable interactable = hit.collider.GetComponent<Interactable>();
 
-                    float distance = Vector3.Distance(transform.position, focus.transform.position);
-                    Debug.Log(distance);
-                    if (distance < interactMinDistance)
-                    {
-                        interactable.Interact();
-                    }
+            SetFocus(interactable);
+
+            if (interactable != null)
+            {
+                float distance = Vector3.Distance(transform.position, focus.transform.position);
+
+                if (!(distance < interactMinDistance))
+                {
+                    SetFocus(null);
                 }
+                else if (Input.GetKeyDown(KeyCode.F))
+                {
+                    SetFocus(null);
+                    interactable.Interact();
+                    Debug.Log(distance);
+                }
+            
+            }
+            else
+            {
+                SetFocus(null);
             }
         }
     }
