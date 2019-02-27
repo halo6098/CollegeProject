@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-    public float radius = 3f;
+   
     public Transform interactionTransform;
     
+    void Awake()
+    {
+        interactionTransform = GetComponent<Transform>();
+    }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(interactionTransform.position, radius);
+        Gizmos.DrawWireSphere(interactionTransform.position, PlayerController.interactMinDistance);
     }
 
     public virtual void Interact()

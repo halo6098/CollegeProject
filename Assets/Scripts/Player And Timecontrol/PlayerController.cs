@@ -15,9 +15,9 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private KeyCode jumpKey; //What key is jump? It's space!
     [SerializeField] private float slopeForce; //adds extra force when going down slopes to remove bouncing that comes with unity. (Unity can be buggy!)
     [SerializeField] private float slopeForceRayLength; //fires a ray out of your butt to see if there is a slope below you.
-    [SerializeField] public Interactable focus; // Our current focus: Item, Enemy etc.
-
     [SerializeField] private KeyCode slowTimeKey;
+
+    [SerializeField] public Interactable focus; // Our current focus: Item, Enemy etc.
 
     //Initialise private variables
     private bool slowUsed; // Our current focus: Item, Enemy etc.
@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour {
 
     //Initialise public static variables. These are public static variables meaning they can be accessed by all other scripts.
     public static bool slowTime; //how mana the player has to slow time. 
+    public static float interactMinDistance = 6f; // minimum distance needed to begin interacting with an interactable.
 
     //Initialise public variables.
     public delegate void OnFocusChanged(Interactable newFocus);
@@ -143,7 +144,7 @@ public class PlayerController : MonoBehaviour {
 
                     float distance = Vector3.Distance(transform.position, focus.transform.position);
                     Debug.Log(distance);
-                    if (distance < 30f)
+                    if (distance < interactMinDistance)
                     {
                         interactable.Interact();
                     }
