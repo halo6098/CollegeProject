@@ -124,6 +124,7 @@ public class PlayerController : MonoBehaviour {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
+
             // If we hit
             if (Physics.Raycast(ray, out hit, 100f))
             {
@@ -131,6 +132,13 @@ public class PlayerController : MonoBehaviour {
                 if (interactable != null)
                 {
                     SetFocus(interactable);
+
+                    float distance = Vector3.Distance(transform.position, focus.transform.position);
+                    Debug.Log(distance);
+                    if (distance < 30f)
+                    {
+                        interactable.Interact();
+                    }
                 }
             }
         }

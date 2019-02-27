@@ -81,6 +81,8 @@ public class SlowTime : MonoBehaviour
 
     private void FixedUpdate()
     {
+        theRB.AddForce(Physics.gravity * timeAdjuster); // need to apply the time adjuster to the gravity also, but cant do it to physics.gravity as that effects player too!
+
         float delta = Time.fixedDeltaTime * timeAdjuster; //fixed delta time is the speed of the game. multiplied by our time adjuster, which in this case is 0.1.
         theRB.velocity += Physics.gravity / theRB.mass * delta;
     }

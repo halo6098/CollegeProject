@@ -13,4 +13,10 @@ public class Interactable : MonoBehaviour
         Gizmos.DrawWireSphere(interactionTransform.position, radius);
     }
 
+    public virtual void Interact()
+    {
+        Debug.Log("Object has been interacted with.");
+        gameObject.SetActive(false);
+    }
+
 }
