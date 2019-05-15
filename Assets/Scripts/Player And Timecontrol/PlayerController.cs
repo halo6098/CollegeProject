@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour {
         cam = Camera.main;
         manaPercent = 100f;
         //let unity know that the controller is the player
-
         controller = GetComponent<CharacterController>();
     }
 
@@ -131,11 +130,12 @@ public class PlayerController : MonoBehaviour {
 
             // Shoot out a ray
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            Ray testRay = new Ray(cam.transform.position, cam.transform.rotation * Vector3.forward);
             RaycastHit hit;
 
 
             // If we hit
-        if (Physics.Raycast(ray, out hit, 100f))
+        if (Physics.Raycast(testRay, out hit, 1000f))
         {
             Interactable interactable = hit.collider.GetComponent<Interactable>();
             SetFocus(interactable);
