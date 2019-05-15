@@ -28,6 +28,7 @@ public class SlowTime : MonoBehaviour
             if (!first)
             {
                 theRB.mass *= timeAdjuster;
+                theRB.drag *= timeAdjuster;
                 theRB.velocity /= timeAdjuster;
                 theRB.angularVelocity /= timeAdjuster;
             }
@@ -36,6 +37,7 @@ public class SlowTime : MonoBehaviour
             _timeAdjuster = value; //The value is the value passed into the function from _TimeAdjuster.
 
             theRB.mass /= timeAdjuster;
+            theRB.drag /= timeAdjuster;
             theRB.velocity *= timeAdjuster;
             theRB.angularVelocity *= timeAdjuster;
         }
