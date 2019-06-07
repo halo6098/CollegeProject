@@ -26,12 +26,12 @@ public class PlayerController : MonoBehaviour {
     //Initialise public static variables. These are public static variables meaning they can be accessed by all other scripts.
     public static bool slowTime; //how mana the player has to slow time. 
     public static float interactMinDistance = 3f; // minimum distance needed to begin interacting with an interactable.
-    public Interactable focus; // Our current focus: Item, Enemy etc.
+    public static float manaPercent; //how mana the player has to slow time. 
 
     //Initialise public variables.
     public delegate void OnFocusChanged(Interactable newFocus);
     public OnFocusChanged onFocusChangedCallback;
-    public float manaPercent; //how mana the player has to slow time. 
+    public Interactable focus; // Our current focus: Item, Enemy etc.
 
     //used to hold the current interactable object the player has currently pressed F on.
     Camera cam; // Reference to our camera
@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour {
         cam = Camera.main;
         manaPercent = 100f;
         //let unity know that the controller is the player
+
         controller = GetComponent<CharacterController>();
     }
 
@@ -54,7 +55,9 @@ public class PlayerController : MonoBehaviour {
         ManageMana();
 
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R
+            
+            ))
         {
             SceneManager.LoadSceneAsync("DevTestingZone");
         }
@@ -129,13 +132,12 @@ public class PlayerController : MonoBehaviour {
         // If we press the F key
 
             // Shoot out a ray
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            Ray testRay = new Ray(cam.transform.position, cam.transform.rotation * Vector3.forward);
-            RaycastHit hit;
+            Ray ray = new Ray(cam.transform.position, cam.transform.rotation * Vector3.forward);
+        RaycastHit hit;
 
 
             // If we hit
-        if (Physics.Raycast(testRay, out hit, 1000f))
+        if (Physics.Raycast(ray, out hit, 100f))
         {
             Interactable interactable = hit.collider.GetComponent<Interactable>();
             SetFocus(interactable);

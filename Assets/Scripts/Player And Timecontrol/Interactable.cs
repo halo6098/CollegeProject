@@ -12,14 +12,13 @@ public class Interactable : MonoBehaviour
 
     private Animator animator;
     private bool tutorialComplete = false;
-
     void Awake()
     {
         interactionTransform = GetComponent<Transform>();
-       //if (Doors != null)
-       // {
+        if (Doors != null)
+        {
             animator = Doors.GetComponent<Animator>();
-      //  }
+        }
     }
 
     void Update()
@@ -29,10 +28,10 @@ public class Interactable : MonoBehaviour
             if (PlayerController.slowTime)
             {
                 animator.speed = 0.2f;
-               // if (tutorialAnimator != null)
-              //  {
-               //     tutorialAnimator.SetTrigger("MousePressed");
-             //   }
+                if (tutorialAnimator != null)
+                {
+                    tutorialAnimator.SetTrigger("MousePressed");
+                }
 
             }
             else
@@ -50,13 +49,11 @@ public class Interactable : MonoBehaviour
             }
         }
 
-        if (animator != null)
+        if (animator.GetBool("OpenElevator"))
         {
-     //       if (animator.GetBool("OpenElevator"))
-     //       {
-      //          animator.SetBool("OpenElevator", !animator.GetBool("OpenElevator"));
-      //      }
+                animator.SetBool("OpenElevator", !animator.GetBool("OpenElevator"));
         }
+
     }
 
     void OnDrawGizmosSelected()
